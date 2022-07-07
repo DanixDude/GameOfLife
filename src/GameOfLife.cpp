@@ -42,10 +42,16 @@ void GameOfLife::HandleEvent(SDL_Event& event) {
 		running = false;
 		break;
 
-	case SDL_MOUSEBUTTONUP:
-		if (event.button.button == SDL_BUTTON_LEFT) {
-			Cell& cell = cells[event.button.x / CELL_WIDTH][event.button.y / CELL_HEIGHT];
-			cell.state = !cell.state;
+	case SDL_MOUSEMOTION:
+		Uint32 mouseState = SDL_GetMouseState(nullptr, nullptr);
+		Cell& cell = cells[event.button.x / CELL_WIDTH][event.button.y / CELL_HEIGHT];
+
+		Uint32 lbuttonPressed = (mouseState & SDL_BUTTON_LMASK);
+		Uint32 rbuttonPressed = (mouseState & SDL_BUTTON_RMASK);
+
+		if (lbuttonPressed || rbuttonPressed) {
+			if (lbuttonPressed) cell.state = true;
+			else if (rbuttonPressed) cell.state = false;
 		}
 
 		break;
@@ -153,7 +159,7 @@ void GameOfLife::RunLoop() {
 	SDL_ShowSimpleMessageBox(
 		SDL_MESSAGEBOX_INFORMATION,
 		"Game of Life",
-		"Keybinds:\nPause: ESC\nLeft mouse button: set cell alive/dead",
+		"Keybinds:\nPause: ESC\nLeft mouse button: make cell alive\nRight mouse button: make cell dead",
 		window
 	);
 
