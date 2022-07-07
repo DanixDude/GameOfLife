@@ -1,7 +1,5 @@
 #include "GameOfLife.h"
-
 #include <string>
-#include <cmath>
 
 GameOfLife::GameOfLife() {
 
