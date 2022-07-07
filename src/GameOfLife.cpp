@@ -1,5 +1,7 @@
 #include "GameOfLife.h"
+
 #include <string>
+#include <cmath>
 
 GameOfLife::GameOfLife() {
 
@@ -43,8 +45,18 @@ void GameOfLife::HandleEvent(SDL_Event& event) {
 		break;
 
 	case SDL_MOUSEMOTION:
+	{
+		int xIdx = event.button.x / CELL_WIDTH;
+		int yIdx = event.button.y / CELL_HEIGHT;
+
+		if (xIdx < 0) xIdx = 0;
+		if (yIdx < 0) yIdx = 0;
+
+		if (xIdx >= cellsXTotal) xIdx = cellsXTotal - 1;
+		if (yIdx >= cellsYTotal) yIdx = cellsYTotal - 1;
+
 		Uint32 mouseState = SDL_GetMouseState(nullptr, nullptr);
-		Cell& cell = cells[event.button.x / CELL_WIDTH][event.button.y / CELL_HEIGHT];
+		Cell& cell = cells[xIdx][yIdx];
 
 		Uint32 lbuttonPressed = (mouseState & SDL_BUTTON_LMASK);
 		Uint32 rbuttonPressed = (mouseState & SDL_BUTTON_RMASK);
@@ -55,6 +67,7 @@ void GameOfLife::HandleEvent(SDL_Event& event) {
 		}
 
 		break;
+	}
 
 	case SDL_KEYUP:
 		if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
@@ -159,7 +172,7 @@ void GameOfLife::RunLoop() {
 	SDL_ShowSimpleMessageBox(
 		SDL_MESSAGEBOX_INFORMATION,
 		"Game of Life",
-		"Keybinds:\nPause: ESC\nLeft mouse button: make cell alive\nRight mouse button: make cell dead",
+		"Keybinds:\n\nPause: ESC\nLeft mouse button: make cell alive\nRight mouse button: make cell dead",
 		window
 	);
 
