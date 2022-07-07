@@ -11,6 +11,14 @@ GameOfLife::~GameOfLife() {
 	}
 
 	delete[] cells;
+
+	SDL_DestroyWindow(window);
+	window = nullptr;
+
+	SDL_DestroyRenderer(renderer);
+	renderer = nullptr;
+
+	SDL_Quit();
 }
 
 bool GameOfLife::Initialize() {
